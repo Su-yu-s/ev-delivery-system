@@ -10,7 +10,7 @@
   <img src="https://img.shields.io/badge/Java-17-orange?logo=java" alt="Java 17">
   <img src="https://img.shields.io/badge/MyBatis-3.0-blue" alt="MyBatis">
   <img src="https://img.shields.io/badge/MySQL-8.0-blue?logo=mysql" alt="MySQL">
-  <img src="https://img.shields.io/badge/license-MIT-green" alt="License">
+  <img src="https://img.shields.io/badge/license-Apache%202.0-blue" alt="License">
 </p>
 
 ---
@@ -230,7 +230,7 @@ A centralized analytics panel giving administrators an at-a-glance overview of t
 
 ## License
 
-This project is licensed under the **MIT License** -- see the [LICENSE](LICENSE) file for details.
+This project is licensed under the **Apache License 2.0** — see the [LICENSE](LICENSE) file for details.
 
 ---
 
