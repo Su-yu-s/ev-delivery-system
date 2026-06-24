@@ -17,19 +17,7 @@
 
 ## 📖 Overview
 
-**EVRouter** is a full-stack web application designed for managing electric-vehicle delivery operations in urban environments. It combines real-time Amap (高德地图) route planning, DeepSeek-powered AI assistance, charging-station discovery, and role-based access control into a unified platform — making green logistics smarter and more efficient.
-
-## ✨ Key Features
-
-| Category | Features |
-|----------|----------|
-| 🗺️ **Route Planning** | Input start/end addresses, auto-calculate distance, duration, and energy consumption via Amap API |
-| ⚡ **Charging Stations** | Discover nearby charging stations along the route; visual markers on the interactive map |
-| 🚚 **Task Management** | Full lifecycle: create → pending → in-progress → completed; filtering and pagination |
-| 🤖 **AI Assistant** | DeepSeek-powered chatbot for route optimization, weather queries, and delivery tips |
-| 👥 **User System** | Registration, login, profile management with JWT authentication |
-| 🔐 **RBAC** | Admin and User roles with fine-grained API permissions (`sys_role` / `sys_permission`) |
-| 📊 **Admin Dashboard** | User management, task oversight, and data analytics panels |
+**EVRouter** is a full-stack web application for managing electric-vehicle delivery operations in urban environments. It combines real-time Amap route planning, DeepSeek-powered AI assistance, charging-station discovery, and RBAC into a unified platform — making green logistics smarter and more efficient.
 
 ## 🏗️ Tech Stack
 
@@ -41,6 +29,8 @@ Database  │  MySQL 8.0
 AI        │  DeepSeek API (chat/completions)
 Build     │  Maven
 ```
+
+---
 
 ## 🚀 Quick Start
 
@@ -58,8 +48,6 @@ cd ev-delivery-system
 ```
 
 ### 2. Set Up the Database
-
-Run the SQL script to create tables and seed sample data:
 
 ```bash
 mysql -u root -p < src/main/resources/db/psdb.sql
@@ -79,11 +67,11 @@ Edit `application.properties` with your own credentials:
 spring.datasource.username=your_db_username
 spring.datasource.password=your_db_password
 
-# Amap API (get yours at https://lbs.amap.com/)
+# Amap API — get yours at https://lbs.amap.com/
 amap.key=your_amap_key
 amap.security-code=your_amap_security_code
 
-# DeepSeek API (get yours at https://platform.deepseek.com/)
+# DeepSeek API — get yours at https://platform.deepseek.com/
 deepseek.api-key=your_deepseek_api_key
 
 # JWT
@@ -97,26 +85,28 @@ mvn clean package -DskipTests
 java -jar target/ev-delivery-system-1.0-SNAPSHOT.jar
 ```
 
-The application will start at **http://localhost:8088**.
+The application starts at **http://localhost:8088**.
 
-### 5. Login
+### 5. Default Accounts
 
-| Role | Username | Password |
-|------|----------|----------|
-| Admin | `admin` | `123456` |
-| User | `Once` | `123456` |
+| Role  | Username | Password |
+|-------|----------|----------|
+| Admin | `admin`  | `123456` |
+| User  | `Once`   | `123456` |
+
+---
 
 ## 📁 Project Structure
 
 ```
 src/main/java/com/peisong/
-├── EvDeliverySystemApplication.java    # Entry point
+├── EvDeliverySystemApplication.java    # Spring Boot entry point
 ├── config/                             # Security, CORS, JWT filter, Amap config
-├── controller/                         # REST controllers
+├── controller/                         # REST API controllers
 ├── entity/                             # POJOs (User, DeliveryTask, ChargingStation)
 ├── mapper/                             # MyBatis mapper interfaces
-├── service/                            # Business logic interfaces & implementations
-└── util/                               # JWT utility, Amap API utility
+├── service/                            # Service interfaces & implementations
+└── util/                               # JWT utility, Amap API helper
 
 src/main/resources/
 ├── application.properties.example      # Configuration template
@@ -125,19 +115,160 @@ src/main/resources/
 └── static/                              # Frontend (HTML, CSS, JS, images)
 ```
 
-## 📸 Screenshots
+---
 
-| Home | Admin Dashboard |
-|------|-----------------|
-| Main page with Amap route planning, task list, and AI assistant sidebar | Admin panel for user & task management |
+## 📸 Module Walkthrough
+
+---
+
+### 🏠 1. Home — Route Planning & Task Dashboard
+
+> **Page:** `/html/index.html`
+
+The landing page is the central hub where users plan delivery routes on an interactive Amap, manage their task list, and interact with the AI assistant.
+
+**Key Capabilities:**
+- 🗺️ **Interactive Map** — Amap-powered map with real-time route rendering, drag-to-adjust waypoints, and charging-station markers along the route
+- 📍 **Route Planner** — Enter start/end addresses to auto-calculate distance, estimated time, and energy consumption
+- 📋 **Task Table** — Filterable task list (All / Pending / In-Progress / Completed) with pagination; status badges and action buttons
+- 🤖 **AI Assistant Sidebar** — Collapsible chatbot panel with quick-action buttons for route planning, charging-station lookup, weather query, and optimization tips
+- 💡 **Tips Carousel** — Rotating delivery tips covering weather, energy saving, safety, charging advice, and motivational quotes
+
+> 🖼️ *Screenshot placeholder — Home Page*
+<p align="center">
+  <img src="screenshots/home.png" alt="Home Page" width="800">
+</p>
+
+---
+
+### 🔐 2. Authentication — Login & Register
+
+> **Pages:** `/html/login.html` · `/html/register.html`
+
+Clean, centered form pages with client-side validation and JWT-based authentication flow.
+
+**Key Capabilities:**
+- 📱 **Phone-number login** with password
+- 📝 **Registration** with username, phone, password, and optional profile fields
+- ✅ **Client-side validation** with inline error messages
+- 🔄 **Auto-redirect** to home page after successful login
+- 🎨 **Animated entrance** with fade-in-up transitions
+
+> 🖼️ *Screenshot placeholder — Login Page*
+<p align="center">
+  <img src="screenshots/login.png" alt="Login Page" width="400">
+</p>
+
+> 🖼️ *Screenshot placeholder — Register Page*
+<p align="center">
+  <img src="screenshots/register.png" alt="Register Page" width="400">
+</p>
+
+---
+
+### 👤 3. Profile — Personal Center
+
+> **Page:** `/html/profile.html`
+
+A tabbed personal center where users view and edit their account information.
+
+**Sections:**
+- 📋 **Profile Info** — View/edit avatar, name, gender, age, email, phone number
+- 🔒 **Security Settings** — Change password with old/new/confirm password validation
+- ⚙️ **Account Management** — View account creation time and status
+
+**UI Features:**
+- 🖼️ Click-to-change avatar with instant preview
+- 📑 Tab-based navigation (Profile / Security / Account)
+- ✅ Success/error toast notifications
+
+> 🖼️ *Screenshot placeholder — Profile Page*
+<p align="center">
+  <img src="screenshots/profile.png" alt="Profile Page" width="800">
+</p>
+
+---
+
+### 📊 4. Admin — Data Dashboard
+
+> **Page:** `/html/admin-dashboard.html` · **Role:** Admin only
+
+A centralized analytics panel giving administrators an at-a-glance overview of the system.
+
+**Key Capabilities:**
+- 📈 **Statistics Cards** — Total users, total tasks, pending tasks, completed tasks with trend indicators
+- 📊 **Charts & Graphs** — Visual breakdown of task status distribution and user activity
+- 🔍 **Quick Search** — Look up users or tasks directly from the dashboard
+
+> 🖼️ *Screenshot placeholder — Admin Dashboard*
+<p align="center">
+  <img src="screenshots/admin-dashboard.png" alt="Admin Dashboard" width="800">
+</p>
+
+---
+
+### 👥 5. Admin — User Management
+
+> **Page:** `/html/admin-users.html` · **Role:** Admin only
+
+A full CRUD interface for managing all registered users in the system.
+
+**Key Capabilities:**
+- 📋 **User Table** — Sortable columns with ID, username, phone, email, role, status
+- 🔍 **Search & Filter** — Search by username or phone; filter by role (Admin/User) or status (Active/Disabled)
+- ➕ **Add User** — Modal form for creating new users with role assignment
+- ✏️ **Edit User** — Inline or modal editing of user details
+- 🗑️ **Delete User** — Soft-delete with confirmation dialog
+- 📄 **Pagination** — Server-side pagination for large user bases
+
+> 🖼️ *Screenshot placeholder — Admin User Management*
+<p align="center">
+  <img src="screenshots/admin-users.png" alt="Admin User Management" width="800">
+</p>
+
+---
+
+### 🚚 6. Admin — Task Management
+
+> **Page:** `/html/admin-tasks.html` · **Role:** Admin only
+
+Centralized oversight of all delivery tasks across the system, with advanced filtering and batch operations.
+
+**Key Capabilities:**
+- 📋 **All-Tasks Table** — View every user's tasks with sortable columns (ID, itinerary, mileage, time, energy, status)
+- 🔍 **Advanced Filters** — Filter by task status, date range, or specific user
+- ➕ **Create Task** — Modal form for creating new delivery tasks on behalf of any user
+- ✏️ **Edit Task** — Modify task details such as itinerary, mileage, time, and energy
+- 🗑️ **Delete Task** — Remove tasks with confirmation
+- 🔄 **Status Transition** — Manually advance task status (Pending → In-Progress → Completed)
+- 📄 **Pagination** — Efficient navigation through large task datasets
+
+> 🖼️ *Screenshot placeholder — Admin Task Management*
+<p align="center">
+  <img src="screenshots/admin-tasks.png" alt="Admin Task Management" width="800">
+</p>
+
+---
 
 ## 🛡️ Security
 
-- **JWT-based authentication** with configurable expiration
+- **JWT-based authentication** with configurable expiration (default 24h)
 - **BCrypt** password encoding via Spring Security
-- **RBAC** with `sys_role`, `sys_permission`, `role_permission`, and `user_role` tables
-- **CORS** and character encoding filters pre-configured
+- **RBAC** with 4 dedicated tables: `sys_role`, `sys_permission`, `role_permission`, `user_role`
+- **CORS** and **character encoding** filters pre-configured
 - Sensitive credentials excluded from version control via `.gitignore`
+
+### Permission Matrix
+
+| Permission      | Admin | User |
+|-----------------|:-----:|:----:|
+| View all users  |  ✅   |  ❌  |
+| CRUD users      |  ✅   |  ❌  |
+| View all tasks  |  ✅   |  ❌  |
+| CRUD tasks      |  ✅   |  ✅  |
+| View stations   |  ✅   |  ✅  |
+
+---
 
 ## 📄 License
 
