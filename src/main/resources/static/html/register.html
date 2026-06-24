@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+  <title>用户注册 - 电动汽车物资配送系统</title>
+  <link rel="shortcut icon" href="/images/logo.png">
+  <!-- 引入主题系统 -->
+  <link rel="stylesheet" href="/css/theme.css?v=20260118002">
+  <!-- 引入独立CSS文件 -->
+  <link rel="stylesheet" href="/css/register.css?v=20260118002">
+</head>
+
+<body class="bg-image">
+
+  <!-- 注册表单容器 -->
+  <div class="register-container fade-in-up animation-delay-0-2s">
+    <div class="register-header">
+      <h1>用户注册</h1>
+      <p>创建您的账户</p>
+    </div>
+
+    <!-- 成功消息 -->
+    <div class="success-message" id="successMessage">
+      注册成功！正在跳转到登录页面...
+    </div>
+
+    <form id="registerForm">
+      <div class="form-group">
+        <label for="phone">手机号 <span class="required">*</span></label>
+        <input type="tel" id="phone" name="phone" placeholder="请输入手机号" required>
+        <div class="error-message" id="phoneError"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">密码 <span class="required">*</span></label>
+        <input type="password" id="password" name="password" placeholder="请输入密码" required>
+        <div class="error-message" id="passwordError"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">确认密码 <span class="required">*</span></label>
+        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="请再次输入密码" required>
+        <div class="error-message" id="confirmPasswordError"></div>
+      </div>
+
+      <button type="submit" class="register-btn" id="registerBtn">
+        <span id="btnText">注册账户</span>
+        <span id="btnLoading" class="hidden">注册中...</span>
+      </button>
+    </form>
+
+    <div class="login-link">
+      已有账户？<a href="login.html">立即登录</a>
+    </div>
+  </div>
+
+  <!-- 引入独立JS文件 -->
+  <script src="/js/register.js"></script>
+</body>
+</html>

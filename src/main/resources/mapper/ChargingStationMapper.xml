@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.peisong.mapper.ChargingStationMapper">
+    
+    <!-- 结果集映射 -->
+    <resultMap id="ChargingStationResultMap" type="com.peisong.entity.ChargingStation">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="address" property="address" />
+        <result column="longitude" property="longitude" />
+        <result column="latitude" property="latitude" />
+        <result column="phone" property="phone" />
+        <result column="status" property="status" />
+        <result column="available_count" property="availableCount" />
+        <result column="total_count" property="totalCount" />
+        <result column="business_hours" property="businessHours" />
+    </resultMap>
+    
+    <!-- 根据ID查询 -->
+    <select id="selectById" resultMap="ChargingStationResultMap">
+        SELECT * FROM charging_station WHERE id = #{id}
+    </select>
+    
+    <!-- 查询所有 -->
+    <select id="selectAll" resultMap="ChargingStationResultMap">
+        SELECT * FROM charging_station ORDER BY name
+    </select>
+    
+    <!-- 根据状态查询 -->
+    <select id="selectByStatus" resultMap="ChargingStationResultMap">
+        SELECT * FROM charging_station WHERE status = #{status} ORDER BY name
+    </select>
+    
+    <!-- 根据位置附近搜索充电站点 -->
+    <!-- 注意：这里使用了简单的距离计算公式，实际应用中可能需要根据数据库类型使用更精确的地理距离计算方法 -->
+    <select id="getByLocation" resultMap="ChargingStationResultMap">
+        <![CDATA[
+        SELECT 
+            *,
+            (6371 * ACOS(COS(RADIANS(#{latitude})) * COS(RADIANS(latitude)) * 
+            COS(RADIANS(longitude) - RADIANS(#{longitude})) + SIN(RADIANS(#{latitude})) * 
+            SIN(RADIANS(latitude)))) * 1000 AS distance_meters
+        FROM 
+            charging_station
+        WHERE 
+            status = 'ACTIVE'
+            AND (6371 * ACOS(COS(RADIANS(#{latitude})) * COS(RADIANS(latitude)) * 
+            COS(RADIANS(longitude) - RADIANS(#{longitude})) + SIN(RADIANS(#{latitude})) * 
+            SIN(RADIANS(latitude)))) * 1000 <= #{radius}
+        ORDER BY 
+            distance_meters ASC
+        ]]>
+    </select>
+    
+    <!-- 新增 -->
+    <insert id="insert" parameterType="com.peisong.entity.ChargingStation">
+        INSERT INTO charging_station (
+            id, name, address, longitude, latitude, phone, 
+            status, available_count, total_count, business_hours
+        ) VALUES (
+            #{id}, #{name}, #{address}, #{longitude}, #{latitude}, #{phone}, 
+            #{status}, #{availableCount}, #{totalCount}, #{businessHours}
+        )
+    </insert>
+    
+    <!-- 更新 -->
+    <update id="update" parameterType="com.peisong.entity.ChargingStation">
+        UPDATE charging_station SET
+            name = #{name},
+            address = #{address},
+            longitude = #{longitude},
+            latitude = #{latitude},
+            phone = #{phone},
+            status = #{status},
+            available_count = #{availableCount},
+            total_count = #{totalCount},
+            business_hours = #{businessHours}
+        WHERE id = #{id}
+    </update>
+    
+    <!-- 更新状态 -->
+    <update id="updateStatus">
+        UPDATE charging_station SET status = #{status} WHERE id = #{id}
+    </update>
+    
+    <!-- 更新可用充电桩数量 -->
+    <update id="updateAvailableCount">
+        UPDATE charging_station SET available_count = #{availableCount} WHERE id = #{id}
+    </update>
+    
+    <!-- 删除 -->
+    <delete id="delete">
+        DELETE FROM charging_station WHERE id = #{id}
+    </delete>
+    
+    <!-- 批量删除 -->
+    <delete id="deleteBatch" parameterType="java.util.List">
+        DELETE FROM charging_station WHERE id IN
+        <foreach collection="list" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

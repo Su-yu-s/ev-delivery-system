@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.peisong.mapper.DeliveryTaskMapper">
+    
+    <!-- 结果集映射 -->
+    <resultMap id="DeliveryTaskResultMap" type="com.peisong.entity.DeliveryTask">
+        <id column="id" property="id" />
+        <result column="itinerary" property="itinerary" />
+        <result column="mileage" property="mileage" />
+        <result column="time" property="time" />
+        <result column="energy" property="energy" />
+        <result column="status" property="status" />
+        <result column="create_time" property="createTime" />
+        <result column="start_time" property="startTime" />
+        <result column="end_time" property="endTime" />
+        <result column="start_addr" property="startAddr" />
+        <result column="end_addr" property="endAddr" />
+        <result column="user_id" property="userId" />
+    </resultMap>
+    
+    <!-- 根据ID查询 -->
+    <select id="selectById" resultMap="DeliveryTaskResultMap">
+        SELECT * FROM delivery_task WHERE id = #{id}
+    </select>
+    
+    <!-- 查询所有 -->
+    <select id="selectAll" resultMap="DeliveryTaskResultMap">
+        SELECT * FROM delivery_task ORDER BY create_time DESC
+    </select>
+    
+    <!-- 根据状态查询 -->
+    <select id="selectByStatus" resultMap="DeliveryTaskResultMap">
+        SELECT * FROM delivery_task WHERE status = #{status} ORDER BY create_time DESC
+    </select>
+    
+    <!-- 根据驾驶员ID查询 -->
+   <select id="selectByUserId" resultMap="DeliveryTaskResultMap">
+        SELECT * FROM delivery_task WHERE user_id = #{userId} ORDER BY create_time DESC
+    </select>
+    
+    <!-- 新增 -->
+    <insert id="insert" parameterType="com.peisong.entity.DeliveryTask">
+        INSERT INTO delivery_task (
+            id, itinerary, mileage, time, energy, status,
+            create_time, start_time, end_time, start_addr, end_addr, user_id
+        ) VALUES (
+            #{id}, #{itinerary}, #{mileage}, #{time}, #{energy}, #{status},
+            #{createTime}, #{startTime}, #{endTime}, #{startAddr}, #{endAddr}, #{userId}
+        )
+    </insert>
+    
+    <!-- 更新 -->
+    <update id="update" parameterType="com.peisong.entity.DeliveryTask">
+        UPDATE delivery_task SET
+            itinerary = #{itinerary},
+            mileage = #{mileage},
+            time = #{time},
+            energy = #{energy},
+            status = #{status},
+            create_time = #{createTime},
+            start_time = #{startTime},
+            end_time = #{endTime},
+            start_addr = #{startAddr},
+            end_addr = #{endAddr},
+            user_id = #{userId}
+        WHERE id = #{id}
+    </update>
+    
+    <!-- 更新状态 -->
+    <update id="updateStatus">
+        UPDATE delivery_task SET status = #{status} WHERE id = #{id}
+    </update>
+    
+    <!-- 删除 -->
+    <delete id="delete">
+        DELETE FROM delivery_task WHERE id = #{id}
+    </delete>
+    
+    <!-- 批量删除 -->
+    <delete id="deleteBatch" parameterType="java.util.List">
+        DELETE FROM delivery_task WHERE id IN
+        <foreach collection="list" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+  <title>用户登录 - 电动汽车物资配送系统</title>
+  <link rel="shortcut icon" href="/images/logo.png">
+  <!-- 引入主题系统 -->
+  <link rel="stylesheet" href="/css/theme.css?v=20260118002">
+  <!-- 引入独立CSS文件 -->
+  <link rel="stylesheet" href="/css/login.css?v=20260117001">
+</head>
+
+<body class="bg-image">
+
+  <!-- 登录表单容器 -->
+  <div class="login-container fade-in-up animation-delay-0-2s" id="loginContainer">
+    <div class="login-header">
+      <h1>用户登录</h1>
+      <p>欢迎回来</p>
+    </div>
+    
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="loginId">手机号</label>
+        <input type="text" class="form-input" id="loginId" name="loginId" placeholder="请输入手机号" required>
+        <div class="error-message" id="loginIdError"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">密码</label>
+        <input type="password" class="form-input" id="password" name="password" placeholder="请输入密码" required>
+        <div class="error-message" id="passwordError"></div>
+      </div>
+
+      <div class="login-options">
+        <div class="remember-me">
+          <input type="checkbox" id="rememberMe" name="rememberMe">
+          <label for="rememberMe">记住我</label>
+        </div>
+        <a href="javascript:void(0)" class="forgot-password" onclick="showForgotPassword()">忘记密码？</a>
+      </div>
+
+      <button type="submit" class="login-btn" id="loginBtn">
+        <span id="btnText">登录</span>
+        <span id="btnLoading" class="hidden">登录中...</span>
+      </button>
+    </form>
+
+    <div class="register-link">
+      还没有账户？<a href="register.html">立即注册</a>
+    </div>
+  </div>
+
+  <!-- 忘记密码容器 -->
+  <div class="login-container fade-in-up" id="forgotContainer" style="display: none;">
+    <div class="login-header">
+      <h1>忘记密码</h1>
+      <p>请联系管理员重置密码</p>
+    </div>
+    
+    <div class="forgot-password-content">
+      <div class="info-box">
+        <h3>密码重置说明</h3>
+        <p>为保障账户安全，密码重置需联系系统管理员。</p>
+        <ul>
+          <li>请提供您的注册手机号</li>
+          <li>管理员将验证您的身份后重置密码</li>
+          <li>重置后请及时修改为新密码</li>
+        </ul>
+      </div>
+      
+      <div class="contact-info">
+        <p>联系方式：</p>
+        <p>管理员电话：198-5166-3611</p>
+        <p>工作时间：周一至周五 9:00-18:00</p>
+      </div>
+    </div>
+
+    <button type="button" class="login-btn" onclick="showLogin()">
+      <span>返回登录</span>
+    </button>
+  </div>
+
+  <!-- 引入独立JS文件 -->
+  <script src="/js/login.js?v=20260118013"></script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.peisong.mapper.UserMapper">
+    
+    <!-- 结果集映射 -->
+    <resultMap id="UserResultMap" type="com.peisong.entity.User">
+        <id column="id" property="id" />
+        <result column="username" property="username" />
+        <result column="phone" property="phone" />
+        <result column="password" property="password" />
+        <result column="name" property="name" />
+        <result column="gender" property="gender" />
+        <result column="age" property="age" />
+        <result column="email" property="email" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="status" property="status" />
+        <result column="role" property="role" />
+    </resultMap>
+    
+    <!-- 根据ID查询 -->
+    <select id="selectById" resultMap="UserResultMap">
+        SELECT * FROM user WHERE id = #{id}
+    </select>
+    
+    <!-- 根据用户名查询 -->
+    <select id="selectByUsername" resultMap="UserResultMap">
+        SELECT * FROM user WHERE username = #{username}
+    </select>
+    
+    <!-- 根据手机号查询 -->
+    <select id="selectByPhone" resultMap="UserResultMap">
+        SELECT * FROM user WHERE phone = #{phone}
+    </select>
+    
+    <!-- 查询所有用户 -->
+    <select id="selectAll" resultMap="UserResultMap">
+        SELECT * FROM user ORDER BY create_time DESC
+    </select>
+    
+    <!-- 根据状态查询 -->
+    <select id="selectByStatus" resultMap="UserResultMap">
+        SELECT * FROM user WHERE status = #{status} ORDER BY create_time DESC
+    </select>
+    
+    <!-- 新增用户 -->
+    <insert id="insert" parameterType="com.peisong.entity.User">
+        INSERT INTO user (
+            id, username, phone, password, name, gender, 
+            age, email, status, role, create_time, update_time
+        ) VALUES (
+            #{id}, #{username}, #{phone}, #{password}, #{name}, #{gender}, 
+            #{age}, #{email}, 1, #{role}, NOW(), NOW()
+        )
+    </insert>
+    
+    <!-- 更新用户信息 -->
+    <update id="update" parameterType="com.peisong.entity.User">
+        UPDATE user SET
+            username = #{username},
+            phone = #{phone},
+            name = #{name},
+            gender = #{gender},
+            age = #{age},
+            email = #{email},
+            status = #{status},
+            role = #{role},
+            update_time = NOW()
+        WHERE id = #{id}
+    </update>
+    
+    <!-- 更新用户状态 -->
+    <update id="updateStatus">
+        UPDATE user SET status = #{status}, update_time = NOW() WHERE id = #{id}
+    </update>
+    
+    <!-- 更新用户密码 -->
+    <update id="updatePassword">
+        UPDATE user SET password = #{password}, update_time = NOW() WHERE id = #{id}
+    </update>
+    
+    <!-- 删除用户 -->
+    <delete id="delete">
+        DELETE FROM user WHERE id = #{id}
+    </delete>
+    
+    <!-- 批量删除用户 -->
+    <delete id="deleteBatch" parameterType="java.util.List">
+        DELETE FROM user WHERE id IN
+        <foreach collection="list" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+    
+    <!-- 验证用户名和密码 -->
+    <select id="authenticate" resultMap="UserResultMap">
+        SELECT * FROM user 
+        WHERE username = #{username} AND password = #{password} AND status = 1
+    </select>
+    
+    <!-- 验证手机号和密码 -->
+    <select id="authenticateByPhone" resultMap="UserResultMap">
+        SELECT * FROM user 
+        WHERE phone = #{phone} AND password = #{password} AND status = 1
+    </select>
+</mapper>

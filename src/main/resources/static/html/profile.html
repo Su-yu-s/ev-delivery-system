@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+  <!-- 禁止缓存 -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>个人资料 - 电动汽车物资配送系统</title>
+  <link rel="shortcut icon" href="/images/logo.png">
+  <link rel="stylesheet" href="/css/theme.css?v=20260118002">
+  <link rel="stylesheet" href="/css/common-layout.css?v=20260117001">
+  <link rel="stylesheet" href="/css/profile.css?v=20260117001">
+  
+</head>
+
+<body class="bg-image">
+
+  <!-- 顶部标题栏 -->
+  <header class="top-header">
+    <div class="header-content">
+      <div class="header-left">
+        <h1 class="header-title">电动汽车物资配送系统</h1>
+      </div>
+      <div class="header-right">
+        <!-- 未登录状态 -->
+        <div id="authNav" class="auth-nav">
+          <a href="/html/login.html" class="nav-btn login-btn" id="loginBtn">
+            <span>登录</span>
+          </a>
+          <a href="/html/register.html" class="nav-btn register-btn" id="registerBtn">
+            <span>注册</span>
+          </a>
+        </div>
+        
+        <!-- 已登录状态 -->
+        <div id="profileNav" class="profile-nav">
+          <!-- 管理员角色标识 -->
+          <span id="adminBadge" class="admin-badge" style="display: none;">
+            <span>管理员</span>
+          </span>
+          <div class="user-info-dropdown">
+            <button class="user-info-btn" id="userInfoBtn">
+              <span>您好!</span>
+              <span class="user-name" id="navUsername">用户</span>
+              <span class="dropdown-arrow">▼</span>
+            </button>
+            <div class="dropdown-menu" id="userDropdown">
+              <a href="/html/profile.html" class="dropdown-item">
+                <span>个人资料</span>
+              </a>
+              <div id="adminQuickMenu" style="display: none;">
+                <div class="dropdown-divider"></div>
+                <a href="/html/admin-dashboard.html" class="dropdown-item admin-dropdown-item">
+                  <span>管理控制台</span>
+                </a>
+              </div>
+              <div class="dropdown-divider"></div>
+              <button class="dropdown-item logout-item" id="logoutBtn">
+                <span>退出登录</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 左侧导航栏 -->
+  <aside class="left-sidebar">
+    <nav class="sidebar-nav">
+      <a href="/html/index.html" class="nav-item">
+        <span class="nav-text">首页</span>
+      </a>
+      <a href="#" class="nav-item" data-tab="basic">
+        <span class="nav-text">个人中心</span>
+      </a>
+      <a href="#" class="nav-item" data-tab="security">
+        <span class="nav-text">安全设置</span>
+      </a>
+      <a href="#" class="nav-item" data-tab="account">
+        <span class="nav-text">账号管理</span>
+      </a>
+      
+      <!-- 管理员菜单（仅管理员可见） -->
+      <div id="adminMenuSection" class="admin-menu-section" style="display: none;">
+        <div class="nav-divider"></div>
+        <div class="nav-section-title">管理员功能</div>
+        <a href="/html/admin-users.html" class="nav-item admin-nav">
+          <span class="nav-text">用户管理</span>
+        </a>
+        <a href="/html/admin-tasks.html" class="nav-item admin-nav">
+          <span class="nav-text">任务管理</span>
+        </a>
+        <a href="/html/admin-dashboard.html" class="nav-item admin-nav">
+          <span class="nav-text">数据看板</span>
+        </a>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- 主内容区域 -->
+  <div class="page-wrapper">
+    <div class="content-container">
+
+      <!-- 基本信息标签页 -->
+      <div class="tab-content active" id="basicTab">
+        <div class="form-section">
+            <div class="form-group">
+              <label for="username">用户名</label>
+              <input type="text" id="username" name="username" placeholder="请输入用户名">
+              <div class="error-message" id="usernameError"></div>
+            </div>
+
+            <div class="form-group">
+              <label for="phone">手机号</label>
+              <input type="tel" id="phone" name="phone" placeholder="请输入手机号">
+              <div class="error-message" id="phoneError"></div>
+            </div>
+
+            <div class="form-group">
+              <label for="name">姓名</label>
+              <input type="text" id="name" name="name" placeholder="请输入真实姓名">
+              <div class="error-message" id="nameError"></div>
+            </div>
+
+            <div class="form-group">
+              <label for="gender">性别</label>
+              <select id="gender" name="gender">
+                <option value="0">请选择性别</option>
+                <option value="1">男</option>
+                <option value="2">女</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="age">年龄</label>
+              <input type="number" id="age" name="age" min="18" max="100" placeholder="请输入年龄">
+            </div>
+
+            <div class="form-group">
+              <label for="email">邮箱</label>
+              <input type="email" id="email" name="email" placeholder="请输入邮箱地址">
+              <div class="error-message" id="emailError"></div>
+            </div>
+        </div>
+
+        <!-- 操作按钮 -->
+        <div class="action-buttons">
+          <button class="btn btn-secondary" id="cancelBtn">取消</button>
+          <button class="btn btn-primary" id="saveBtn">保存修改</button>
+        </div>
+      </div>
+
+      <!-- 安全设置标签页 -->
+      <div class="tab-content" id="securityTab">
+        <div class="form-section">
+            <div class="form-group">
+              <label for="oldPassword">当前密码</label>
+              <input type="password" id="oldPassword" name="oldPassword" placeholder="请输入当前密码">
+              <div class="error-message" id="oldPasswordError"></div>
+            </div>
+
+            <div class="form-group">
+              <label for="newPassword">新密码</label>
+              <input type="password" id="newPassword" name="newPassword" placeholder="请输入新密码（至少6位）">
+              <div class="error-message" id="newPasswordError"></div>
+            </div>
+
+            <div class="form-group">
+              <label for="confirmNewPassword">确认新密码</label>
+              <input type="password" id="confirmNewPassword" name="confirmNewPassword" placeholder="请再次输入新密码">
+              <div class="error-message" id="confirmNewPasswordError"></div>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+          <button class="btn btn-primary" id="changePasswordBtn">修改密码</button>
+        </div>
+      </div>
+
+      <!-- 账号管理标签页 -->
+      <div class="tab-content" id="accountTab">
+        <div class="form-section">
+            <div class="form-group">
+              <label>注册时间</label>
+              <div class="info-display" id="createTimeDisplay">-</div>
+            </div>
+
+            <div class="form-group">
+              <label>最后更新</label>
+              <div class="info-display" id="updateTimeDisplay">-</div>
+            </div>
+        </div>
+
+        <div class="form-section">
+          <h3 class="danger-section">危险操作</h3>
+          <div class="danger-content">
+            <p>注销账号后，您的所有个人信息和配送任务数据将被永久删除，此操作不可恢复。</p>
+            <ul>
+              <li>所有个人资料将被删除</li>
+              <li>配送任务记录将被清空</li>
+              <li>无法找回已删除的数据</li>
+            </ul>
+            <button class="btn delete-account-btn" id="deleteAccountBtn">注销账号</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 引入通用布局功能 -->
+  <script src="/js/common-layout.js?v=20260118020"></script>
+  <!-- 引入独立JS文件 -->
+  <script src="/js/profile.js?v=20260118012"></script>
+</body>
+</html>

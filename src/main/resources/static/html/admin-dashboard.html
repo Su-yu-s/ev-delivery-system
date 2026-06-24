@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+  <title>数据看板 - 电动汽车物资配送系统</title>
+  <link rel="shortcut icon" href="/images/logo.png">
+  <link rel="stylesheet" href="/css/theme.css?v=20260118002">
+  <link rel="stylesheet" href="/css/common-layout.css?v=20260117001">
+  <link rel="stylesheet" href="/css/admin-common.css?v=20260117001">
+</head>
+
+<body class="bg-image">
+
+  <!-- 顶部标题栏 -->
+  <header class="top-header">
+    <div class="header-content">
+      <div class="header-left">
+        <h1 class="header-title">电动汽车物资配送系统</h1>
+      </div>
+      <div class="header-right">
+        <!-- 未登录状态 -->
+        <div id="authNav" class="auth-nav">
+          <a href="/html/login.html" class="nav-btn login-btn" id="loginBtn">
+            <span>登录</span>
+          </a>
+          <a href="/html/register.html" class="nav-btn register-btn" id="registerBtn">
+            <span>注册</span>
+          </a>
+        </div>
+        
+        <!-- 已登录状态 -->
+        <div id="profileNav" class="profile-nav">
+          <!-- 管理员角色标识 -->
+          <span id="adminBadge" class="admin-badge" style="display: none;">
+            <span>管理员</span>
+          </span>
+          <div class="user-info-dropdown">
+            <button class="user-info-btn" id="userInfoBtn">
+              <span>您好!</span>
+              <span class="user-name" id="navUsername">用户</span>
+              <span class="dropdown-arrow">▼</span>
+            </button>
+            <div class="dropdown-menu" id="userDropdown">
+              <a href="/html/profile.html" class="dropdown-item">
+                <span>个人资料</span>
+              </a>
+              <div id="adminQuickMenu" style="display: none;">
+                <div class="dropdown-divider"></div>
+                <a href="/html/admin-dashboard.html" class="dropdown-item admin-dropdown-item">
+                  <span>管理控制台</span>
+                </a>
+              </div>
+              <div class="dropdown-divider"></div>
+              <button class="dropdown-item logout-item" id="logoutBtn">
+                <span>退出登录</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 左侧导航栏 -->
+  <aside class="left-sidebar">
+    <nav class="sidebar-nav">
+      <a href="/html/index.html" class="nav-item">
+        <span class="nav-text">首页</span>
+      </a>
+      <a href="/html/profile.html" class="nav-item">
+        <span class="nav-text">个人中心</span>
+      </a>
+      <a href="/html/profile.html#security" class="nav-item">
+        <span class="nav-text">安全设置</span>
+      </a>
+      <a href="/html/profile.html#account" class="nav-item">
+        <span class="nav-text">账号管理</span>
+      </a>
+      
+      <!-- 管理员菜单（仅管理员可见） -->
+      <div id="adminMenuSection" class="admin-menu-section" style="display: none;">
+        <div class="nav-divider"></div>
+        <div class="nav-section-title">管理员功能</div>
+        <a href="/html/admin-users.html" class="nav-item admin-nav">
+          <span class="nav-text">用户管理</span>
+        </a>
+        <a href="/html/admin-tasks.html" class="nav-item admin-nav">
+          <span class="nav-text">任务管理</span>
+        </a>
+        <a href="/html/admin-dashboard.html" class="nav-item admin-nav">
+          <span class="nav-text">数据看板</span>
+        </a>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- 主内容区域 -->
+  <div class="page-wrapper">
+    <div class="admin-container">
+      
+      <!-- 核心统计卡片 -->
+      <div class="main-stats-section">
+        <div class="main-stat-card users">
+          <div class="stat-icon-large">U</div>
+          <div class="stat-content">
+            <div class="stat-value-large" id="totalUsers">0</div>
+            <div class="stat-label-large">总用户数</div>
+            <div class="stat-detail">
+              <span>管理员: <strong id="adminCount">0</strong></span>
+              <span>普通用户: <strong id="normalCount">0</strong></span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="main-stat-card tasks">
+          <div class="stat-icon-large">T</div>
+          <div class="stat-content">
+            <div class="stat-value-large" id="totalTasks">0</div>
+            <div class="stat-label-large">总任务数</div>
+            <div class="stat-detail">
+              <span>待配送: <strong id="pendingCount">0</strong></span>
+              <span>配送中: <strong id="activeCount">0</strong></span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="main-stat-card completed">
+          <div class="stat-icon-large">C</div>
+          <div class="stat-content">
+            <div class="stat-value-large" id="completedTasks">0</div>
+            <div class="stat-label-large">已完成任务</div>
+            <div class="stat-detail">
+              <span>完成率: <strong id="completionRate">0%</strong></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 任务状态分布 -->
+      <div class="dashboard-row">
+        <div class="dashboard-card task-distribution">
+          <div class="card-header">
+            <h3>任务状态分布</h3>
+            <button class="refresh-btn" onclick="loadDashboardData()">刷新</button>
+          </div>
+          <div class="card-body">
+            <div class="status-bars">
+              <div class="status-bar-item">
+                <div class="bar-label">
+                  <span class="bar-name">待配送</span>
+                  <span class="bar-value" id="pendingPercent">0%</span>
+                </div>
+                <div class="bar-track">
+                  <div class="bar-fill pending" id="pendingBar" style="width: 0%"></div>
+                </div>
+                <span class="bar-count" id="pendingNum">0 个</span>
+              </div>
+              <div class="status-bar-item">
+                <div class="bar-label">
+                  <span class="bar-name">配送中</span>
+                  <span class="bar-value" id="activePercent">0%</span>
+                </div>
+                <div class="bar-track">
+                  <div class="bar-fill active" id="activeBar" style="width: 0%"></div>
+                </div>
+                <span class="bar-count" id="activeNum">0 个</span>
+              </div>
+              <div class="status-bar-item">
+                <div class="bar-label">
+                  <span class="bar-name">已完成</span>
+                  <span class="bar-value" id="completedPercent">0%</span>
+                </div>
+                <div class="bar-track">
+                  <div class="bar-fill completed" id="completedBar" style="width: 0%"></div>
+                </div>
+                <span class="bar-count" id="completedNum">0 个</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-card quick-actions">
+          <div class="card-header">
+            <h3>快捷操作</h3>
+          </div>
+          <div class="card-body">
+            <div class="action-grid">
+              <a href="/html/admin-users.html" class="action-item">
+                <div class="action-icon users">U</div>
+                <span>用户管理</span>
+              </a>
+              <a href="/html/admin-tasks.html" class="action-item">
+                <div class="action-icon tasks">T</div>
+                <span>任务管理</span>
+              </a>
+              <a href="/html/index.html" class="action-item">
+                <div class="action-icon home">H</div>
+                <span>返回首页</span>
+              </a>
+              <a href="javascript:void(0)" onclick="loadDashboardData()" class="action-item">
+                <div class="action-icon refresh">R</div>
+                <span>刷新数据</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 最近任务和用户 -->
+      <div class="dashboard-row">
+        <div class="dashboard-card recent-tasks">
+          <div class="card-header">
+            <h3>最近任务</h3>
+            <a href="/html/admin-tasks.html" class="view-all">查看全部</a>
+          </div>
+          <div class="card-body">
+            <div class="recent-list" id="recentTasksList">
+              <div class="loading-mini">加载中...</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-card recent-users">
+          <div class="card-header">
+            <h3>最近用户</h3>
+            <a href="/html/admin-users.html" class="view-all">查看全部</a>
+          </div>
+          <div class="card-body">
+            <div class="recent-list" id="recentUsersList">
+              <div class="loading-mini">加载中...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 消息提示 -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="/js/common-layout.js?v=20260118020"></script>
+  <script src="/js/admin-dashboard.js?v=20260118003"></script>
+</body>
+</html>

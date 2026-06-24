@@ -1,0 +1,21 @@
+# === 构建输出 ===
+target/
+out/
+*.jar
+*.class
+
+# === IDE ===
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# === 敏感文件（API密钥、数据库密码等） ===
+DeepSeek_API key.txt
+高德API_Key.txt
+src/main/resources/application.properties
+
+# === 操作系统 ===
+.DS_Store
+Thumbs.db
+*~

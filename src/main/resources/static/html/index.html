@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+  <title>电动汽车物资配送系统</title>
+  <link rel="shortcut icon" href="/images/logo.png">
+  <link rel="stylesheet" href="/css/theme.css?v=20260118002">
+  <link rel="stylesheet" href="/css/common-layout.css?v=20260117001">
+  <link rel="stylesheet" href="/css/index.css?v=20260117002">
+  <!-- 引入高德地图 API -->
+  <script src="https://a.amap.com/jsapi_demos/static/demo-center/js/demoutils.js"></script>
+</head>
+
+<body class="bg-image">
+
+  <!-- 顶部标题栏 -->
+  <header class="top-header">
+    <div class="header-content">
+      <div class="header-left">
+        <h1 class="header-title">电动汽车物资配送系统</h1>
+      </div>
+      <div class="header-right">
+        <!-- 未登录状态 -->
+        <div id="authNav" class="auth-nav">
+          <a href="/html/login.html" class="nav-btn login-btn" id="loginBtn">
+            <span>登录</span>
+          </a>
+          <a href="/html/register.html" class="nav-btn register-btn" id="registerBtn">
+            <span>注册</span>
+          </a>
+        </div>
+        
+        <!-- 已登录状态 -->
+        <div id="profileNav" class="profile-nav">
+          <!-- 管理员角色标识 -->
+          <span id="adminBadge" class="admin-badge" style="display: none;">
+            <span>管理员</span>
+          </span>
+          <div class="user-info-dropdown">
+            <button class="user-info-btn" id="userInfoBtn">
+              <span>您好！</span>
+              <span class="user-name" id="navUsername">用户</span>
+              <span class="dropdown-arrow">▼</span>
+            </button>
+            <div class="dropdown-menu" id="userDropdown">
+              <a href="/html/profile.html" class="dropdown-item">
+                <span>个人资料</span>
+              </a>
+              <div id="adminQuickMenu" style="display: none;">
+                <div class="dropdown-divider"></div>
+                <a href="/html/admin-dashboard.html" class="dropdown-item admin-dropdown-item">
+                  <span>管理控制台</span>
+                </a>
+              </div>
+              <div class="dropdown-divider"></div>
+              <button class="dropdown-item logout-item" id="logoutBtn">
+                <span>退出登录</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 左侧导航栏 -->
+  <aside class="left-sidebar">
+    <nav class="sidebar-nav">
+      <a href="/html/index.html" class="nav-item active">
+
+        <span class="nav-text">首页</span>
+      </a>
+      <a href="/html/profile.html" class="nav-item">
+
+        <span class="nav-text">个人中心</span>
+      </a>
+      <a href="/html/profile.html#security" class="nav-item">
+
+        <span class="nav-text">安全设置</span>
+      </a>
+      <a href="/html/profile.html#account" class="nav-item">
+
+        <span class="nav-text">账号管理</span>
+      </a>
+      
+      <!-- 管理员菜单（仅管理员可见） -->
+      <div id="adminMenuSection" class="admin-menu-section" style="display: none;">
+        <div class="nav-divider"></div>
+        <div class="nav-section-title">管理员功能</div>
+        <a href="/html/admin-users.html" class="nav-item admin-nav">
+          <span class="nav-text">用户管理</span>
+        </a>
+        <a href="/html/admin-tasks.html" class="nav-item admin-nav">
+          <span class="nav-text">任务管理</span>
+        </a>
+        <a href="/html/admin-dashboard.html" class="nav-item admin-nav">
+          <span class="nav-text">数据看板</span>
+        </a>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- 主内容区域 -->
+  <div class="page-wrapper">
+
+  <!-- 主容器 -->
+  <div class="fixed-container">
+    <div class="main-container">
+      <!-- 地图区 -->
+      <div class="map-area fade-in-up animation-delay-0-2s">
+        <div id="map-container"></div>
+        <div id="panel" class="collapsed">
+          <div class="panel-header">
+            <h3>配送路线</h3>
+            <button class="panel-toggle-btn" id="panelToggleBtn" title="折叠/展开">
+              <span class="toggle-icon">▼</span>
+            </button>
+          </div>
+          <div class="panel-content" id="panelContent">
+            <!-- 路线详情将由高德地图自动填充 -->
+          </div>
+        </div>
+      </div>
+
+      <!-- 右侧信息面板 -->
+      <div class="right-panel">
+        <!-- 地点信息输入区域 -->
+        <div class="input-section fade-in-up animation-delay-0-3s">
+          <h2>开启您的行程</h2>
+          <div class="input-group">
+            <label for="startAddr">起点地址：</label>
+            <input type="text" id="startAddr" placeholder="输入起点地址">
+          </div>
+          <div class="input-group">
+            <label for="endAddr">终点地址：</label>
+            <input type="text" id="endAddr" placeholder="输入终点地址" >
+          </div>
+
+          <button id="planRouteBtn" class="primary-btn">规划路线</button>
+        </div>
+
+        <!-- 出行建议区 -->
+        <div class="suggestion-section fade-in-up animation-delay-0-4s">
+          <h2>🌟 配送小贴士</h2>
+          <div id="routeSuggestion">
+            <!-- 温馨生活化提示语，将通过 JS 动态轮播显示 -->
+            <div class="tips-container">
+              <div class="tip-item active">
+                <span class="tip-icon">🌤️</span>
+                <div class="tip-content">
+                  <h3>天气提醒</h3>
+                  <p>今日天气晴好，适合出行配送。记得随身携带水壶，多喝水保持体力哦！</p>
+                </div>
+              </div>
+              <div class="tip-item">
+                <span class="tip-icon">⚡</span>
+                <div class="tip-content">
+                  <h3>节能小贴士</h3>
+                  <p>保持稳定车速、避免频繁加速减速，可以提升续航20%。绿色出行，从你我做起！</p>
+                </div>
+              </div>
+              <div class="tip-item">
+                <span class="tip-icon">🚗</span>
+                <div class="tip-content">
+                  <h3>安全驾驶</h3>
+                  <p>上路前请检查车辆电量、胎压和制动系统。安全是回家最近的路！</p>
+                </div>
+              </div>
+              <div class="tip-item">
+                <span class="tip-icon">🔋</span>
+                <div class="tip-content">
+                  <h3>充电建议</h3>
+                  <p>电量低于30%时及时充电，附近充电站已为您标注在地图上。让续航无忧！</p>
+                </div>
+              </div>
+              <div class="tip-item">
+                <span class="tip-icon">✨</span>
+                <div class="tip-content">
+                  <h3>服务提升</h3>
+                  <p>微笑服务、轻拿轻放、准时送达，让每一次配送都成为美好体验！</p>
+                </div>
+              </div>
+              <div class="tip-item">
+                <span class="tip-icon">🌈</span>
+                <div class="tip-content">
+                  <h3>每日鼓励</h3>
+                  <p>你的每一次努力都值得被看见！加油，配送小伙伴，美好的一天从现在开始！</p>
+                </div>
+              </div>
+              <!-- 第7个轮播项：当前位置信息（由JS动态更新） -->
+              <div class="tip-item" id="locationTipItem">
+                <span class="tip-icon">🧭</span>
+                <div class="tip-content">
+                  <h3>当前位置</h3>
+                  <p>点击地图左下角的定位按钮获取当前位置</p>
+                </div>
+              </div>
+            </div>
+            <div class="tips-navigation">
+              <span class="tip-dot active" data-index="0"></span>
+              <span class="tip-dot" data-index="1"></span>
+              <span class="tip-dot" data-index="2"></span>
+              <span class="tip-dot" data-index="3"></span>
+              <span class="tip-dot" data-index="4"></span>
+              <span class="tip-dot" data-index="5"></span>
+              <span class="tip-dot" data-index="6"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 配送任务表单区域 -->
+  <div class="delivery-section fade-in-up animation-delay-0-5s">
+    <div class="delivery-header">
+      <h2>配送任务清单</h2>
+      <!-- 管理员操作栏（仅管理员可见） -->
+      <div id="adminTaskActions" class="admin-task-actions" style="display: none;">
+        <label class="view-toggle">
+          <input type="checkbox" id="viewAllTasksToggle" onchange="toggleTaskView()">
+          <span>查看所有用户任务</span>
+        </label>
+        <button class="admin-action-btn" onclick="window.location.href='/html/admin-tasks.html'">任务管理</button>
+        <button class="admin-action-btn primary" onclick="showAddTaskForm()">新建任务</button>
+      </div>
+    </div>
+    
+    <!-- 模糊遮罩层 -->
+    <div id="deliveryOverlay" class="delivery-overlay">
+      <div class="overlay-content">
+        <div class="lock-icon">🔒</div>
+        <h3>请先登录</h3>
+        <p>登录后即可查看和管理配送任务</p>
+        <button class="login-prompt-btn" onclick="window.location.href='login.html'">立即登录</button>
+      </div>
+    </div>
+    
+    
+    <!-- 筛选按钮组 -->
+    <div class="filter-buttons">
+      <button class="filter-btn active" data-filter="all">全部</button>
+      <button class="filter-btn" data-filter="pending">待配送</button>
+      <button class="filter-btn" data-filter="active">配送中</button>
+      <button class="filter-btn" data-filter="completed">已完成</button>
+    </div>
+    
+    <!-- 任务列表 -->
+    <table class="delivery-table">
+      <thead>
+        <tr>
+          <th>任务ID</th>
+          <th>行程</th>
+          <th>里程</th>
+          <th>时间</th>
+          <th>耗电</th>
+          <th>状态</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody id="deliveryTasks">
+        <!-- 配送任务将通过 JS 动态填充 -->
+      </tbody>
+    </table>
+    
+    <!-- 分页控件 -->
+    <div class="pagination-container" id="deliveryPaginationContainer"></div>
+  </div>
+
+  <!-- AI智能助手 -->
+  <div class="ai-sidebar" id="aiSidebar">
+    <!-- 折叠时的小圆形头像 -->
+    <div class="ai-float-btn" id="aiFloatBtn" onclick="toggleAI()">
+      <span class="ai-float-icon">🤖</span>
+      <!-- 气泡提示框 -->
+      <div class="ai-tooltip">
+        <span>嗨！👋</span>
+        <div class="ai-tooltip-arrow"></div>
+      </div>
+    </div>
+    
+    <!-- 展开后的完整面板 -->
+    <div class="ai-panel ai-panel-hidden" id="aiPanel">
+      <div class="ai-assistant-header">
+        <div class="ai-title">
+          <span class="ai-icon">🤖</span>
+          <h2>AI配送助手</h2>
+        </div>
+        <button class="ai-close-btn" onclick="toggleAI()" title="收起">
+          <span>▼</span>
+        </button>
+      </div>
+      
+      <div class="ai-assistant-content">
+        <!-- 聊天窗口 -->
+        <div class="ai-chat-window" id="aiChatWindow">
+          <div class="ai-welcome-message">
+            <div class="ai-avatar">🤖</div>
+            <div class="ai-message">
+              <p>你好！我是AI配送助手，我可以帮你：</p>
+              <ul>
+                <li>📍 规划最优配送路线</li>
+                <li>⚡ 推荐附近充电站</li>
+                <li>🌤️ 查询天气和路况</li>
+                <li>💡 提供配送优化建议</li>
+              </ul>
+              <p>请问有什么可以帮助您的？</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 快捷功能按钮 -->
+        <div class="ai-quick-actions">
+          <button class="quick-action-btn" data-action="route">
+            <span class="action-icon">📍</span>
+            <span>路线规划</span>
+          </button>
+          <button class="quick-action-btn" data-action="charging">
+            <span class="action-icon">⚡</span>
+            <span>找充电站</span>
+          </button>
+          <button class="quick-action-btn" data-action="weather">
+            <span class="action-icon">🌤️</span>
+            <span>天气查询</span>
+          </button>
+          <button class="quick-action-btn" data-action="optimize">
+            <span class="action-icon">💡</span>
+            <span>优化建议</span>
+          </button>
+        </div>
+        
+        <!-- 输入区域 -->
+        <div class="ai-input-area">
+          <input type="text" id="aiInput" placeholder="输入您的问题..."
+                 onkeypress="if(event.key==='Enter' && window.aiAssistant) aiAssistant.sendMessage()">
+          <button id="aiSendBtn" class="ai-send-btn" onclick="if(window.aiAssistant) aiAssistant.sendMessage()">
+            <span>🚀</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  function toggleAI() {
+    const floatBtn = document.getElementById('aiFloatBtn');
+    const panel = document.getElementById('aiPanel');
+    
+    if (panel.style.display === 'none' || !panel.style.display) {
+      // 展开
+      floatBtn.style.opacity = '0';
+      floatBtn.style.transform = 'scale(0)';
+      
+      setTimeout(() => {
+        floatBtn.style.display = 'none';
+        panel.style.display = 'flex';
+        panel.style.opacity = '0';
+        panel.style.transform = 'scale(0.8) translateY(20px)';
+        
+        // 触发重排
+        panel.offsetHeight;
+        
+        panel.style.transition = 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        panel.style.opacity = '1';
+        panel.style.transform = 'scale(1) translateY(0)';
+      }, 200);
+    } else {
+      // 收起
+      panel.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+      panel.style.opacity = '0';
+      panel.style.transform = 'scale(0.8) translateY(20px)';
+      
+      setTimeout(() => {
+        panel.style.display = 'none';
+        floatBtn.style.display = 'flex';
+        floatBtn.style.opacity = '0';
+        floatBtn.style.transform = 'scale(0)';
+        
+        // 触发重排
+        floatBtn.offsetHeight;
+        
+        floatBtn.style.transition = 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        floatBtn.style.opacity = '1';
+        floatBtn.style.transform = 'scale(1)';
+      }, 300);
+    }
+  }
+  </script>
+
+  <!-- 高德地图安全配置 - 将由JS动态设置 -->
+  <script>
+    window._AMapSecurityConfig = {
+        securityJsCode: "",  // 通过API动态加载
+    };
+  </script>
+  
+  <!-- 管理员操作弹窗 -->
+  <div id="adminModal" class="admin-modal" style="display: none;">
+    <div class="admin-modal-content">
+      <div class="admin-modal-header">
+        <h2 id="adminModalTitle">管理员控制台</h2>
+        <button class="admin-modal-close" onclick="closeAdminPanel()">&times;</button>
+      </div>
+      <div class="admin-modal-body" id="adminModalBody">
+        <!-- 动态内容 -->
+      </div>
+    </div>
+  </div>
+  <script src="https://webapi.amap.com/loader.js"></script>
+  <!-- 引入通用布局功能 -->
+  <script src="/js/common-layout.js?v=20260118020"></script>
+  <!-- 引入独立JS文件 -->
+  <script src="/js/index.js?v=20260118021"></script>
+</body>
+
+</html>

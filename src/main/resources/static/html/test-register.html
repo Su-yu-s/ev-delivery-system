@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+  <title>注册测试 - 电动汽车物资配送系统</title>
+  <link rel="shortcut icon" href="/images/logo.png">
+  <!-- 引入主题系统 -->
+  <link rel="stylesheet" href="/css/theme.css">
+  <!-- 引入独立CSS文件 -->
+  <link rel="stylesheet" href="/css/register.css">
+</head>
+
+<body class="bg-image">
+  <!-- 注册表单容器 -->
+  <div class="register-container fade-in-up animation-delay-0-2s">
+    <div class="register-header">
+      <h1>注册测试</h1>
+      <p>测试注册功能</p>
+    </div>
+    
+    <form id="registerForm">
+      <div class="form-group">
+        <label for="phone">手机号 <span class="required">*</span></label>
+        <input type="tel" id="phone" name="phone" placeholder="请输入手机号" value="13912345678" required>
+        <div class="error-message" id="phoneError"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">密码 <span class="required">*</span></label>
+        <input type="password" id="password" name="password" placeholder="请输入密码" value="123456" required>
+        <div class="error-message" id="passwordError"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">确认密码 <span class="required">*</span></label>
+        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="请再次输入密码" value="123456" required>
+        <div class="error-message" id="confirmPasswordError"></div>
+      </div>
+
+      <button type="submit" class="register-btn" id="registerBtn">
+        <span id="btnText">测试注册</span>
+      </button>
+    </form>
+
+    <div id="result" style="margin-top: 20px; padding: 10px; border-radius: 5px;"></div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const registerForm = document.getElementById('registerForm');
+      const resultDiv = document.getElementById('result');
+      
+      registerForm.addEventListener('submit', async function(event) {
+        event.preventDefault();
+        
+        // 获取表单数据
+        const formData = {
+          phone: document.getElementById('phone').value.trim(),
+          password: document.getElementById('password').value
+        };
+        
+        try {
+          // 显示加载状态
+          resultDiv.innerHTML = '<div style="background: #e3f2fd; color: #1976d2; padding: 10px; border-radius: 5px;">正在测试注册...</div>';
+          
+          const response = await fetch('/api/user/register', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              phone: formData.phone,
+              password: formData.password
+            })
+          });
+          
+          const result = await response.json();
+          
+          if (result.code === 200) {
+            // 注册成功
+            resultDiv.innerHTML = `
+              <div style="background: #e8f5e9; color: #388e3c; padding: 10px; border-radius: 5px;">
+                <h3>注册成功!</h3>
+                <p>您可以使用此手机号和密码登录系统</p>
+              </div>
+            `;
+          } else {
+            // 注册失败
+            resultDiv.innerHTML = `
+              <div style="background: #ffebee; color: #d32f2f; padding: 10px; border-radius: 5px;">
+                <h3>注册失败!</h3>
+                <p>错误代码: ${result.code}</p>
+                <p>错误信息: ${result.message}</p>
+              </div>
+            `;
+          }
+        } catch (error) {
+          console.error('注册测试失败:', error);
+          resultDiv.innerHTML = `
+            <div style="background: #ffebee; color: #d32f2f; padding: 10px; border-radius: 5px;">
+              <h3>请求失败!</h3>
+              <p>错误信息: ${error.message}</p>
+            </div>
+          `;
+        }
+      });
+    });
+  </script>
+</body>
+</html>
