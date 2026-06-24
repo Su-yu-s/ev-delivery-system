@@ -87,13 +87,6 @@ java -jar target/ev-delivery-system-1.0-SNAPSHOT.jar
 
 The application starts at **http://localhost:8088**.
 
-### 5. Default Accounts
-
-| Role  | Username | Password |
-|-------|----------|----------|
-| Admin | `admin`  | `123456` |
-| User  | `Once`   | `123456` |
-
 ---
 
 ## Project Structure
@@ -134,9 +127,10 @@ The landing page is the central hub where users plan delivery routes on an inter
 - **AI Assistant Sidebar** -- Collapsible chatbot panel with quick-action buttons for route planning, charging-station lookup, weather query, and optimization tips
 - **Tips Carousel** -- Rotating delivery tips covering weather, energy saving, safety, charging advice, and motivational quotes
 
-> Screenshot placeholder -- Home Page
+
 <p align="center">
-  <img src="screenshots/home.png" alt="Home Page" width="800">
+<img width="2547" height="1233" alt="image" src="https://github.com/user-attachments/assets/0e28d38d-cd6e-4eef-8d30-fc64721686f7" />
+
 </p>
 
 ---
@@ -154,14 +148,16 @@ Clean, centered form pages with client-side validation and JWT-based authenticat
 - **Auto-redirect** to home page after successful login
 - **Animated entrance** with fade-in-up transitions
 
-> Screenshot placeholder -- Login Page
+>  -- Login Page
 <p align="center">
-  <img src="screenshots/login.png" alt="Login Page" width="400">
+<img width="2241" height="1051" alt="image" src="https://github.com/user-attachments/assets/3955fde3-3d35-4508-ac10-7f1b565a5113" />
+
 </p>
 
-> Screenshot placeholder -- Register Page
+> -- Register Page
 <p align="center">
-  <img src="screenshots/register.png" alt="Register Page" width="400">
+<img width="2499" height="1170" alt="image" src="https://github.com/user-attachments/assets/c83628ab-7448-473f-a15e-c1b9b3000579" />
+
 </p>
 
 ---
@@ -182,9 +178,10 @@ A tabbed personal center where users view and edit their account information.
 - Tab-based navigation (Profile / Security / Account)
 - Success/error toast notifications
 
-> Screenshot placeholder -- Profile Page
+> -- Profile Page
 <p align="center">
-  <img src="screenshots/profile.png" alt="Profile Page" width="800">
+<img width="2523" height="1212" alt="image" src="https://github.com/user-attachments/assets/205dfd5c-727f-4e92-ad2d-0e9b98df9ade" />
+
 </p>
 
 ---
@@ -200,55 +197,16 @@ A centralized analytics panel giving administrators an at-a-glance overview of t
 - **Charts & Graphs** -- Visual breakdown of task status distribution and user activity
 - **Quick Search** -- Look up users or tasks directly from the dashboard
 
-> Screenshot placeholder -- Admin Dashboard
+> r -- Admin Dashboard
 <p align="center">
-  <img src="screenshots/admin-dashboard.png" alt="Admin Dashboard" width="800">
+<img width="2535" height="1239" alt="image" src="https://github.com/user-attachments/assets/71b6c5c7-af2e-4aca-aa9c-0c6512b29c0d" />
+
 </p>
 
 ---
 
-### 5. Admin -- User Management
 
-> **Page:** `/html/admin-users.html` · **Role:** Admin only
 
-A full CRUD interface for managing all registered users in the system.
-
-**Key Capabilities:**
-- **User Table** -- Sortable columns with ID, username, phone, email, role, status
-- **Search & Filter** -- Search by username or phone; filter by role (Admin/User) or status (Active/Disabled)
-- **Add User** -- Modal form for creating new users with role assignment
-- **Edit User** -- Inline or modal editing of user details
-- **Delete User** -- Soft-delete with confirmation dialog
-- **Pagination** -- Server-side pagination for large user bases
-
-> Screenshot placeholder -- Admin User Management
-<p align="center">
-  <img src="screenshots/admin-users.png" alt="Admin User Management" width="800">
-</p>
-
----
-
-### 6. Admin -- Task Management
-
-> **Page:** `/html/admin-tasks.html` · **Role:** Admin only
-
-Centralized oversight of all delivery tasks across the system, with advanced filtering and batch operations.
-
-**Key Capabilities:**
-- **All-Tasks Table** -- View every user's tasks with sortable columns (ID, itinerary, mileage, time, energy, status)
-- **Advanced Filters** -- Filter by task status, date range, or specific user
-- **Create Task** -- Modal form for creating new delivery tasks on behalf of any user
-- **Edit Task** -- Modify task details such as itinerary, mileage, time, and energy
-- **Delete Task** -- Remove tasks with confirmation
-- **Status Transition** -- Manually advance task status (Pending to In-Progress to Completed)
-- **Pagination** -- Efficient navigation through large task datasets
-
-> Screenshot placeholder -- Admin Task Management
-<p align="center">
-  <img src="screenshots/admin-tasks.png" alt="Admin Task Management" width="800">
-</p>
-
----
 
 ## Security
 
